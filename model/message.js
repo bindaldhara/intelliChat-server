@@ -52,10 +52,7 @@ const AssistantMessage = Message.discriminator(
   new mongoose.Schema(
     {
       summary: String,
-      result_text: {
-        type: String,
-        required: true,
-      },
+      result_text: String,
       result_table_path: String,
       result_visualization_path: String,
       error: String,

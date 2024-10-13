@@ -8,7 +8,7 @@ export const getAssistantResponse = async (chat_id) => {
     throw new Error("Last message is not a user message");
   }
 
-  if (lastMessage.message.includes("error")) {
+  if (lastMessage.message.toLowerCase().includes("error")) {
     return new AssistantMessage({
       chat_id,
       role: "assistant",
@@ -17,7 +17,7 @@ export const getAssistantResponse = async (chat_id) => {
     });
   }
 
-  if (lastMessage.message.includes("summary")) {
+  if (lastMessage.message.toLowerCase().includes("summary")) {
     return new AssistantMessage({
       chat_id,
       role: "assistant",
