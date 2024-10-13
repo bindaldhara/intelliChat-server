@@ -1,0 +1,50 @@
+import { UserMessage, Message } from "../model/message.js";
+import Chat from "../model/chat.js";
+import { getAssistantResponse } from "../llm/getAssistantResponse.js";
+
+export const receiveMessage = async (req, res) => {
+  let { message, chat_id } = req.body;
+
+  if (chat_id === "new" || !chat_id) {
+    const newChat = new Chat();
+    chat_id = newChat.id;
+    await newChat.save();
+  }
+
+  const newMessage = new UserMessage({ ...message, id: undefined, chat_id });
+  await newMessage.save();
+
+  const assistantMessage = await getAssistantResponse(chat_id);
+  await assistantMessage.save();
+
+  res.status(200).json({ message: assistantMessage.toJSON(), chat_id });
+};
+
+export const getMessages = async (req, res) => {
+  const { chat_id } = req.params;
+
+  const messages = await Message.find({ chat_id }).sort({ timestamp: 1 });
+
+  res.status(200).json({ messages, chat_id });
+};
+
+export const regenerateMessage = async (req, res) => {
+  const { message_id } = req.params;
+
+  const message = await Message.findById(message_id);
+
+  if (message.role !== "assistant") {
+    return res
+      .status(400)
+      .json({ message: "Message is not an assistant message" });
+  }
+  const chat_id = message.chat_id;
+  await Message.deleteMany({
+    timestamp: { $gte: message.timestamp },
+  });
+
+  const assistantMessage = await getAssistantResponse(chat_id);
+  await assistantMessage.save();
+
+  res.status(200).json({ message: assistantMessage.toJSON(), chat_id });
+};
