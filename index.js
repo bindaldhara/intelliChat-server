@@ -33,6 +33,10 @@ app.use("/message", messageRoutes);
 app.use("/chat", chatRoutes);
 app.use("/admin", authenticate, authorizeAdmin, adminRoutes);
 
+app.get("/", (req, res) =>{
+  res.send("Server up and running");
+});
+
 app.use((err, req, res, next) => {
   const { message = "Internal server error", statusCode = 500 } = err;
   res.status(statusCode).json({ message });
