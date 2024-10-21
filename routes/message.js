@@ -5,6 +5,7 @@ import {
   regenerateMessage,
 } from "../controller/message.js";
 import { catchAsync } from "../utils/index.js";
+
 const router = express.Router();
 
 router.post("/", catchAsync(receiveMessage));
