@@ -25,4 +25,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i
+    - name: Create .env file
+      run: |
+        echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" > .env
+        echo "MISTRAL_API_KEY =${{ secrets.MISTRAL_API_KEY }}" > .env
     - run: pm2 restart index
