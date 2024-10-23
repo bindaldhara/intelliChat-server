@@ -8,6 +8,7 @@ export const receiveMessage = async (req, res) => {
   if (chat_id === "new" || !chat_id) {
     const newChat = new Chat();
     chat_id = newChat.id;
+    newChat.title = message.message;
     await newChat.save();
   }
 
@@ -47,4 +48,45 @@ export const regenerateMessage = async (req, res) => {
   await assistantMessage.save();
 
   res.status(200).json({ message: assistantMessage.toJSON(), chat_id });
+};
+
+export const deleteMessage = async (req, res) => {
+  const { message_id } = req.params;
+
+  // First, delete the user message
+  const userMessage = await UserMessage.findByIdAndDelete(message_id);
+  if (!userMessage) {
+    return res.status(404).json({ message: "User message not found" });
+  }
+console.log('user message', userMessage);
+
+  const assistantMessage = await Message.findOneAndDelete({
+    chat_id: userMessage.chat_id, 
+    role: "assistant",
+    timestamp: { $gte: userMessage.timestamp }, 
+  });
+console.log("assistant message", assistantMessage);
+  if (assistantMessage) {
+    console.log("Assistant message deleted");
+  } else {
+    console.log("No corresponding assistant message found");
+  }
+const remainingMessages = await UserMessage.find({
+  chat_id: userMessage.chat_id,
+});
+
+let chatDeleted = false;
+// If no messages left, delete the chat
+if (remainingMessages.length === 0) {
+  await Chat.findByIdAndDelete(userMessage.chat_id);
+  chatDeleted = true; // Indicate that the chat was deleted
+}
+  res
+    .status(200)
+    .json({
+      message: "Message deleted successfully",
+      deletedUserMessage: userMessage,
+      deletedAssistantMessage: assistantMessage,
+      chatDeleted,
+    });
 };
