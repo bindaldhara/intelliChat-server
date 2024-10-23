@@ -32,5 +32,5 @@ jobs:
         echo "MISTRAL_API_KEY =${{ secrets.MISTRAL_API_KEY }}" >> .env
         echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> .env
         echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
-    - run: pm2 restart index --update-env
+    - run: sudo pm2 restart index --update-env
 
