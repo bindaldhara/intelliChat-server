@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.js";
 import chatRoutes from "./routes/chat.js";
 import adminRoutes from "./routes/admin.js";
 import messageRoutes from "./routes/message.js";
+import feedbackRoutes from "./routes/feedback.js";
 
 import { authenticate } from "./middleware/authentication.js";
 import { authorizeAdmin } from "./middleware/authorization.js";
@@ -32,6 +33,7 @@ app.use("/auth", userRoutes);
 app.use("/message", messageRoutes);
 app.use("/chat", chatRoutes);
 app.use("/admin", authenticate, authorizeAdmin, adminRoutes);
+app.use("/feedback", feedbackRoutes);
 
 app.get("/", (req, res) =>{
   res.send("Server up and running");

@@ -9,4 +9,5 @@ router.get("/", authenticate, catchAsync(getChats));
 router.post("/", authenticate, catchAsync(saveChat));
 router.delete("/:chat_id", catchAsync(deleteChat)); 
 router.put("/:chat_id", catchAsync(renameChat));
+
 export default router;

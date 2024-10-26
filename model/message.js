@@ -56,6 +56,7 @@ const AssistantMessage = Message.discriminator(
       result_table_path: String,
       result_visualization_path: String,
       error: String,
+      feedback : String,
       role: {
         type: String,
         enum: ["assistant"],

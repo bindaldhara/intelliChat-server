@@ -16,11 +16,12 @@ const conversationHistory = messages.map((msg) => ({
     role: msg.role ,
     content: msg.role === 'user' ? msg.message : (msg.result_text ?? msg.errors),
   }));
-console.log(conversationHistory);
+
   const userMessage = lastMessage.message;
 
   try {
     if(userMessage.toLowerCase().includes("error")) throw new Error("test Error");
+    
     const chatResponse = await client.chat.complete({
       model: "mistral-large-latest",
       messages: conversationHistory,
@@ -37,13 +38,11 @@ console.log(conversationHistory);
         summary : userMessage.toLowerCase().includes("summary")? "this is summaryy" : undefined,
     });
   } catch (error) {
-    console.error("Error while fetching response from Mistral:", error);
     return new AssistantMessage({
       chat_id,
       role: "assistant",
       timestamp: Date.now(),
       error: "Failed to get response from Mistral AI",
-      
     });
   }
 };

@@ -53,7 +53,6 @@ export const regenerateMessage = async (req, res) => {
 export const deleteMessage = async (req, res) => {
   const { message_id } = req.params;
 
-  // First, delete the user message
   const userMessage = await UserMessage.findByIdAndDelete(message_id);
   if (!userMessage) {
     return res.status(404).json({ message: "User message not found" });
@@ -76,10 +75,9 @@ const remainingMessages = await UserMessage.find({
 });
 
 let chatDeleted = false;
-// If no messages left, delete the chat
 if (remainingMessages.length === 0) {
   await Chat.findByIdAndDelete(userMessage.chat_id);
-  chatDeleted = true; // Indicate that the chat was deleted
+  chatDeleted = true; 
 }
   res
     .status(200)
