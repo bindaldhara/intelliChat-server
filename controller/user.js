@@ -61,12 +61,12 @@ export const fetchSelf = async (req, res) => {
 
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com", // SMTP host
-  port: 465, // SMTP port for SSL
-  secure: true, // Use SSL
+  host: "smtp.gmail.com", 
+  port: 465, 
+  secure: true, 
   auth: {
-    user: process.env.EMAIL_USER, // Your Gmail address
-    pass: process.env.EMAIL_PASS, // Your Gmail password or App Password
+    user: process.env.EMAIL_USER, 
+    pass: process.env.EMAIL_PASS, 
   },
 });
 
@@ -81,8 +81,8 @@ export const forgotPassword = async (req, res) => {
         .json({ message: "User with this email not found" });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000);// Generate a 6-digit OTP
-    const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // Expiry time set to 30 minutes
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000); 
 
     const otpRecord = new Otp({
       email,
@@ -97,7 +97,6 @@ export const forgotPassword = async (req, res) => {
       console.error("Error saving OTP:", error);
     }
 
-    // Send OTP via email
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
