@@ -22,6 +22,7 @@ mongoose
   });
 
 const app = express();
+console.log("Initializing IntelliChat server");
 app.use(cors(
   {
     origin : "*"
